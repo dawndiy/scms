@@ -1,0 +1,116 @@
+# -*-coding: utf-8 -*-
+<%inherit file="base.html"/>
+
+<%block name="title">
+${ article.title }
+</%block>
+
+<%block name="content">
+<div class="container" >
+    <div class="row-fluid">
+        <div class="span12" style="text-align: center">
+            <h3 class="center">
+                ${ article.title }<br/>
+                <small>
+                    <i class="icon-user"></i>${ article.author } 
+                    <i class="icon-time"></i>${ article.publish_time.date() }
+                    <div class="btn-group">
+                        <a class="btn-small dropdown-toggle" data-toggle="dropdown" href="#" >
+                            <i class="icon-font"></i><span class="caret"></span>
+                        </a> 
+                        <ul class="dropdown-menu">
+                            <li><a id="font-small" href="javascript:void(0)" >小</a></li>
+                            <li><a id="font-medium" href="javascript:void(0)" >中</a></li>
+                            <li><a id="font-large" href="javascript:void(0)" >大</a></li>
+                        </ul>
+                    </div>
+                    <i class="icon-tags"></i> 
+                    %for tag in article.tags.all():
+                    ## 该文章的所有标签
+                        <a href="/sohu/list/tag/${tag}">${tag}</a>
+                    %endfor
+                </small>
+            </h3>
+        </div>
+        <div id="content" class="span11 container">
+            ${ article.content } 
+        </div>
+        <div class="span12 btn-group">
+            <a id="like" class="btn btn-mini btn-success">顶一下 <span id="like-num">${ article.like }</span></a>
+            <a id="dislike" class="btn btn-mini btn btn-warning">踩一下 <span id="dislike-num">${ article.dislike }</span></a>
+        </div>
+    </div>
+</div>
+<script>
+$(document).ready(function(){
+    /* 推荐（顶/踩）功能用 ajax 实现 */
+    // 顶一下处理
+    $("#like").click(function(){
+        $.ajax({
+            url:"${ article.id }/like",
+            async:false,
+            success:function(){
+                $("#like-num").html(parseInt($("#like-num").text()) + 1);
+            }
+        });
+    });
+    
+    // 踩一下处理
+    $("#dislike").click(function(){
+        $.ajax({
+            url:"${ article.id }/dislike",
+            async:false,
+            success:function(){
+                $("#dislike-num").html(parseInt($("#dislike-num").text()) + 1);
+            }
+        });
+    });
+    
+    /* 设置文章内容的字体大小，并保存设置到cookie */
+    // 保存字体到cookie
+    function saveFontSize(curSize){
+        var date = new Date();
+        date.setTime(date.getTime() + (7*24*60*60*1000));
+        var expires = "; expires=" + date.toGMTString();
+        document.cookie = "fontSize=" + curSize + expires + "; path=/";
+    }
+    // 从cookie取出字体设置
+    function getFontSize(name){
+        if(document.cookie.length > 0){
+            start = document.cookie.indexOf(name);
+            if(start != -1){
+                start += name.length;
+                end = document.cookie.indexOf(";", start);
+                if(end == -1){
+                    end = document.cookie.length;
+                }
+                return unescape(document.cookie.substring(start, end));
+            }   
+        }
+        return "";
+    }
+    
+    // 应用保存的字体设置
+    var savedSize = getFontSize("fontSize=");
+    if (savedSize != ""){
+        $("#content").css("font-size", savedSize);
+    }
+    // 小字体
+    $("#font-small").click(function(){
+        $("#content").css("font-size", "12px");
+        saveFontSize("12px");
+    })
+    // 中字体
+    $("#font-medium").click(function(){
+        $("#content").css("font-size", "14px");
+        saveFontSize("14px");
+    })
+    // 大字体
+    $("#font-large").click(function(){
+        $("#content").css("font-size", "18px");
+        saveFontSize("18px");
+    })
+});
+</script>
+</%block>
+

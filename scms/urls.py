@@ -14,5 +14,7 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^sohu_cms/', include('scms.sohu_cms.urls')),
+    # sohu news
+    url(r'^sohu/', include('scms.sohu_cms.urls')),
+    url(r'^$', 'scms.sohu_cms.views.article_list'),
 )

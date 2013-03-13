@@ -1,0 +1,71 @@
+# -*-coding: utf-8 -*-
+<%inherit file="base.html"/>
+
+<%block name="title">
+新闻分类
+</%block>
+
+<%block name="content">
+<div class="container">
+    <div class="row">
+        <div class="span3">
+        <ul class="nav nav-list affix-top">
+            <li class="
+            % if tag_name == 'all':
+            ## 默认'all'标签选中
+                active
+            % endif
+            "><a href="all">全部</a></li>
+            % for tag in tags:
+            <li class="
+            % if tag_name == tag.tag_name:
+            ## 判断是否当前tag，设置选中样式
+                active
+            % endif            
+            " ><a href="${ tag }">${ tag }</a></li>            
+            % endfor
+        </ul>
+        <!--Sidebar content-->
+        </div>
+        <div class="span9">
+            % for article in articles:
+            ## 文章列表
+                <h5><i class="icon-file"></i><a href="/sohu/detail/${article.id}" >[${article.publish_time.date()}] ${ article.title }</a></h5></a>
+            % endfor
+        <!--Body content-->
+        <div class="container">
+            % if articles.has_other_pages():
+            ## 有其他页面时才显示分页
+            <div class="pagination pagination-small">
+                <ul>
+                <li class="
+                % if articles.has_previous()==False:
+                ## 是否有前一页，设置样式
+                    disabled
+                % endif
+                "><a href="?page=${articles.previous_page_number()}">&laquo;</a></li>
+                
+                % for page_num in articles.paginator.page_range:
+                ## 所有页码
+                    <li class="
+                        % if articles.number == page_num:
+                        ## 是否是当前页，设置样式
+                            active
+                        % endif
+                    "><a href="?page=${page_num}">${page_num}</a></li>
+                % endfor
+                
+                <li class="
+                % if articles.has_next()==False:
+                ## 是否有前一页，设置样式
+                    disabled
+                % endif
+                "><a href="?page=${articles.next_page_number()}">&raquo;</a></li>
+                </ul>
+            </div>
+            % endif 
+        </div>
+        </div>
+    </div>   
+</div>    
+</%block>

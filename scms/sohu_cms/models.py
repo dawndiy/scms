@@ -1,34 +1,38 @@
+# -*- coding: utf-8 -*-
 from django.db import models
 
 STATUS_CHOICES = (
-    ('E', 'Editing'),
-    ('P', 'Published'),
-    ('D', 'Deleted'),
+    ('E', '编辑中'),
+    ('P', '已发布'),
+    ('D', '已删除'),
 )
 
-class Author(models.Model):
-    name = models.CharField(max_length=30)
-    email = models.EmailField(blank=True)
+class Tag(models.Model):
+    '''标签模型'''
+    tag_name = models.CharField(max_length=20, verbose_name='标签名')
 
     def __unicode__(self):
-        return u'%s' % (self.name)
-
-class Category(models.Model):
-    """docstring for Tags"""
-    category_name = models.CharField(max_length=20)
-
-    def __unicode__(self):
-        return self.category_name
+        return self.tag_name
+    
+    class Meta:
+        verbose_name = '标签'
+        verbose_name_plural = '标签列表'
 
 class Article(models.Model):
-    title = models.CharField(max_length=50)
-    publish_time = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES)
-    author = models.ForeignKey(Author)
-    categorys = models.ManyToManyField(Category, blank=True)
-    content = models.TextField()
-    like = models.PositiveIntegerField(blank=True, default=0)
-    dislike = models.PositiveIntegerField(blank=True, default=0)
+    '''新闻文章模型'''
+    title = models.CharField(max_length=50, verbose_name='标题')
+    publish_time = models.DateTimeField(auto_now_add=True, verbose_name='时间')
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, verbose_name='状态')
+    author = models.ForeignKey('auth.User', verbose_name='作者')
+    tags = models.ManyToManyField(Tag, blank=True, verbose_name='标签')
+    content = models.TextField(verbose_name='内容')
+    like = models.PositiveIntegerField(blank=True, default=0,  verbose_name='顶')
+    dislike = models.PositiveIntegerField(blank=True, default=0, verbose_name='踩')
     
     def __unicode__(self):
         return u'%s %s %s' % (self.title, self.author, self.publish_time)
+        
+    class Meta:
+        verbose_name = '文章'
+        verbose_name_plural = '文章列表'
+        ordering = ['-publish_time']

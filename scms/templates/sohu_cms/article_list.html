@@ -1,13 +1,47 @@
-{% extends "base.html" %}
+# -*-coding: utf-8 -*-
+<%inherit file="base.html"/>
 
-{% block title %} acticle list {% endblock %}
+<%block name="title">
+新闻列表
+</%block>
 
-
-{% block content %}
-<div class="content">
-    {% for article in articles %}
-        <h3>{{ article.title }}</h3>
-        <div>{{ article.content}} </div> 
-    {% endfor %}     
-</div>    
-{% endblock %}
+<%block name="content">
+<div class="container">
+    % for article in articles:
+    ## 文章列表
+        <h5><i class="icon-file"></i><a href="/sohu/detail/${article.id}" >[${ article.publish_time.date() }] ${ article.title }</a></h5>
+    % endfor     
+</div>
+<div class="container">
+    % if articles.has_other_pages():
+    ## 有其他页面时才显示分页
+    <div class="pagination pagination-small">
+        <ul>
+        <li class="
+        % if articles.has_previous()==False:
+            ## 是否有前一页，设置样式
+            disabled
+        % endif
+        "><a href="?page=${articles.previous_page_number()}">&laquo;</a></li>
+        
+        % for page_num in articles.paginator.page_range:
+        ## 所有页码
+            <li class="
+                % if articles.number == page_num:
+                    ## 是否是当前页，设置样式
+                    active
+                % endif
+            "><a href="?page=${page_num}">${page_num}</a></li>
+        % endfor
+        
+        <li class="
+        % if articles.has_next()==False:
+        ## 是否有前一页，设置样式
+            disabled
+        % endif
+        "><a href="?page=${articles.next_page_number()}">&raquo;</a></li>
+        </ul>
+    </div>
+    % endif
+</div>
+</%block>

@@ -1,19 +1,65 @@
+# -*-coding: utf-8 -*-
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8" />
+  <head>
+    <meta charset="utf-8">
     <title>
-        {% block title %}{% endblock %}        
+    <%block name="title"></%block>- 搜狐新闻
     </title>
-</head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="DawnDIY" >
 
-<body>
-    <h1>a simple blog</h1>
-    {% block content %}
-    {% endblock %}
-    {% block footer %}
-    {# 任何每个页面都可能修改的文本区域的页脚 #}
-        <p>Thanks for visiting my site! </p>
-    {% endblock %}
-</body>
+    <!-- Le styles -->
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+    </style>
+    <link href="/static/css/bootstrap-responsive.css" rel="stylesheet">
+    <script src="/static/js/jquery-1.9.1.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="/sohu/list">搜狐新闻</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="/sohu/list">最新新闻</a></li>
+              <li><a href="/sohu/list/tag">分类新闻</a></li>
+              <li><a href="/sohu/about">关于</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <!--div class="container"-->
+
+      <%block name="content">
+      </%block>
+
+    <!--/div> <!-- /container -->
+
+    <hr/>
+    <div class="footer">
+        <div class="container">
+            <p class="muted text-right">
+                &copy; 2013 
+                <a href="http://github.com/dawndiy"><i class="icon-user"></i>DawnDIY</a>
+                <a href="/admin"><i class="icon-home"></i>登录</a>
+            </p>
+        </div>
+    </div>
+  </body>
 </html>
